@@ -8,6 +8,7 @@ import { AuthContext } from '../context/AuthContext';
 import happyman from '../assets/happy-man.webp';
 import Button from '../components/Button';
 import { ThemeContext } from '../context/ThemeContext';
+import PasswordReset from '../components/PasswordReset';
 
 function Home() {
   const [token, setToken] = useState<string | null>(null);
@@ -15,7 +16,7 @@ function Home() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const { toggleTheme, isDarkTheme } = useContext(ThemeContext);
-
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const handleLoginSuccess = (response: CredentialResponse) => {
     if (response.credential) {
       setToken(response.credential);
@@ -31,6 +32,10 @@ function Home() {
   }
   const loginOrRegistration = () => {
     setChooseRegister(prevChooseRegister => !prevChooseRegister);
+  }
+  const goBackFromPasswordReset = () => {
+    setShowPasswordReset(false);
+    setChooseRegister(false);
   }
   return (
     <div className='w-full border-1 border-white p-2'>
@@ -63,29 +68,37 @@ function Home() {
         </div>
       </div>
       <h3 id="greatForm" className='m-8 p-2.5 text-lg font-bold  '>Try Now Bro</h3>
-      {chooseRegister ?
+      {showPasswordReset ?
+      <div className='flex flex-col justify-self-center w-3/4 md:w-1/2 lg:w-2/3'>
+        <span className='m-4 p-2.5 cursor-pointer underline hover:no-underline hover:text-slate-400'
+        onClick={goBackFromPasswordReset}
+        >Already have an account? Log in.</span>
+      <PasswordReset />
+      </div>
+      : chooseRegister ? 
       (
         <div className='flex flex-col justify-self-center w-3/4 md:w-1/2 lg:w-2/3'>
-          <span className='m-8 p-2.5 cursor-pointer underline hover:no-underline hover:text-slate-400'
+          <span className='m-4 p-2.5 cursor-pointer underline hover:no-underline hover:text-slate-400'
           onClick={loginOrRegistration}
           >Already have an account? Log in.</span>
           <Register />
+          <div className="flex justify-center items-center"><span className='m-8 p-2.5 text-sm cursor-pointer underline hover:no-underline hover:text-slate-400' onClick={() => setShowPasswordReset(true)}>Forgot your password?</span></div>
         </div>
         ) 
       : 
       (
       <div className='flex flex-col justify-self-center w-3/4 md:w-1/2 lg:w-2/3'>
-      <span className='m-8 p-2.5 cursor-pointer underline hover:no-underline hover:text-slate-400'
+      <span className='m-4 p-2.5 cursor-pointer underline hover:no-underline hover:text-slate-400'
       onClick={loginOrRegistration}
       >Don't have an account? Create one.</span>
       <Login />
+      <div className="flex justify-center items-center"><span className='m-8 p-2.5 text-sm cursor-pointer underline hover:no-underline hover:text-slate-400' onClick={() => setShowPasswordReset(true)}>Forgot your password?</span></div>
       </div>
       )
      }
       <GoogleLogin
       onSuccess={handleLoginSuccess}
       onError={handleLoginFailure}
-      className='m-2 w-1/3 text-white bg-slate-800'
       />
     </div>
   )

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import { AuthContext } from './context/AuthContext';
+import { JSX } from 'react/jsx-runtime'
 
 interface ProtectedRouteProps {
   children: JSX.Element;

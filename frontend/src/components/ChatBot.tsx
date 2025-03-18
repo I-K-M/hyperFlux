@@ -13,7 +13,6 @@ const chatModel = new ChatOpenAI({
   temperature: 0.8,
 });
 
-/** 🔹 Fonction pour récupérer la session depuis le backend */
 const getSessionId = async () => {
   try {
     const response = await fetch(`http://localhost:3000/api/conversation/session`, {
@@ -31,12 +30,11 @@ const getSessionId = async () => {
   }
 };
 
-/** 🔹 Récupérer l'historique des messages */
 const getMessages = async (sessionId: string) => {
   try {
     const response = await fetch(`http://localhost:3000/api/conversation/${sessionId}`, {
       method: "GET",
-      credentials: "include", // ✅ Cookies envoyés
+      credentials: "include", 
     });
 
     if (!response.ok) throw new Error("Failed to fetch messages");
@@ -48,7 +46,6 @@ const getMessages = async (sessionId: string) => {
   }
 };
 
-/** 🔹 Sauvegarder un message */
 const saveMessage = async (sessionId: string, role: string, content: string) => {
   try {
     const response = await fetch(`http://localhost:3000/api/conversation/${sessionId}`, {
@@ -66,7 +63,6 @@ const saveMessage = async (sessionId: string, role: string, content: string) => 
   }
 };
 
-/** 🔹 Configuration du modèle LangChain */
 const template = `You are a helpful AI assistant. Provide detailed and informative responses.
 Conversation so far:
 {history}
@@ -94,7 +90,7 @@ const ChatBot = () => {
     const initializeSession = async () => {
       const fetchedSessionId = await getSessionId();
       if (!fetchedSessionId) {
-        console.error("❌ Impossible d'obtenir un sessionId !");
+        console.error("❌ Impossible to get a sessionId");
         return;
       }
   
@@ -109,13 +105,12 @@ const ChatBot = () => {
   }, [isAuthenticated, navigate]);
   
 
-  /** 🔹 Envoi du message */
   const handleSend = async (event: React.FormEvent) => {
     event.preventDefault();
     
     if (!input.trim()) return;
     if (!sessionId) {
-      console.error("❌ Session ID non défini !");
+      console.error("❌ sessionId not defined");
       return;
     }
 

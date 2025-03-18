@@ -32,16 +32,16 @@ const model = new Ollama({ model: "mistral" });
 app.post("/chat", async (req, res) => {
     const { message } = req.body;
     if (!message) {
-        return res.status(400).json({ error: "Message vide !" });
+        return res.status(400).json({ error: "Empty message" });
     }
-    console.log("Message reçu :", message);
+    console.log("Message received:", message);
     try {
         const response = await model.invoke(message);
-        console.log("Réponse de Mistral :", response);
+        console.log("mistral answer :", response);
         res.json({ response });
     } catch (error) {
-        console.error("Erreur IA :", error);
-        res.status(500).json({ error: "Erreur serveur" });
+        console.error("AI error :", error);
+        res.status(500).json({ error: "server error" });
     }
 });
 

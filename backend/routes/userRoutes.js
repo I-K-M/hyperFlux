@@ -5,10 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-/**
- * ✅ Récupérer la session de l'utilisateur connecté.
- * Si la session n'existe pas encore, elle est créée automatiquement.
- */
+
 router.get("/session", authenticateUser, async (req, res) => {
     try {
         let session = await prisma.conversationHistory.findFirst({
@@ -28,9 +25,7 @@ router.get("/session", authenticateUser, async (req, res) => {
     }
 });
 
-/**
- * ✅ Récupérer toutes les sessions de l'utilisateur connecté
- */
+
 router.get("/sessions", authenticateUser, async (req, res) => {
     try {
         const sessions = await prisma.conversationHistory.findMany({
@@ -46,9 +41,7 @@ router.get("/sessions", authenticateUser, async (req, res) => {
     }
 });
 
-/**
- * ✅ Supprimer une session de l'utilisateur
- */
+
 router.delete("/sessions/:sessionId", authenticateUser, async (req, res) => {
     try {
         const { sessionId } = req.params;
@@ -66,9 +59,7 @@ router.delete("/sessions/:sessionId", authenticateUser, async (req, res) => {
     }
 });
 
-/**
- * ✅ Récupérer les messages d'une session donnée
- */
+
 router.get("/:sessionId", authenticateUser, async (req, res) => {
     try {
         const { sessionId } = req.params;
@@ -89,9 +80,7 @@ router.get("/:sessionId", authenticateUser, async (req, res) => {
     }
 });
 
-/**
- * ✅ Sauvegarder un message dans une session
- */
+
 router.post("/:sessionId", authenticateUser, async (req, res) => {
     try {
         const { sessionId } = req.params;

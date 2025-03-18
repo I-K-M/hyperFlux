@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json()); 
 
 app.get("/", (req, res) => {
-    res.status(200).json({ message: "Bienvenue sur l'API 🚀" });
+    res.status(200).json({ message: "welcome to the API 🚀" });
 });
 
 app.use('/ping', (req, res) => {
@@ -26,6 +26,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
 /* AI */
+app.use('/api/conversation', userRoutes);
+
 const model = new Ollama({ model: "mistral" });
 app.post("/chat", async (req, res) => {
     const { message } = req.body;

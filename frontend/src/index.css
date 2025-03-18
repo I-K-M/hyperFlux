@@ -22,13 +22,13 @@
 :root.dark form {
   background-color: #242424;
 }
-:root.dark input {
+:root.dark input, :root.dark textarea {
   background-color: #616161;
 }
 :root.light form {
   background-color: #afafaf;
 }
-:root.light input {
+:root.light input, :root.light textarea {
   background-color: #dcdcdc;
 }
 a {

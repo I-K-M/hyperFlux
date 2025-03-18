@@ -1,7 +1,6 @@
 import { GoogleLogin, CredentialResponse } from '@react-oauth/google'
 import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthError } from '../types/auth'
 import Login from '../components/Login';
 import Register from '../components/Register'
 import { AuthContext } from '../context/AuthContext';
@@ -46,12 +45,12 @@ function Home() {
     <Button onClick={toggleTheme}>🌑</Button>
     }
     </div>
-      <div className='w-full flex flex-row '>
+      <div className='w-full flex flex-row'>
         <div className='w-1/2'>
-        <h1 className='m-2 p-2.5 font-bold  '>
+        <h1 className='m-2 p-2.5 font-bold'>
           HyperFlux
         </h1>
-        <h2 className='m-8 p-2.5  '>Save time & energy managing your time, tasks, with stats and AI</h2>
+        <h2 className='m-8 p-2.5'>Save time & energy managing your time, tasks, with stats and AI</h2>
         <ol className='text-left m-8 list-decimal'>
         <li>Calendar & tasks manager with timer</li>
         <li>An AI agent here to help you</li>

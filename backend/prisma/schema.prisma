@@ -20,3 +20,11 @@ model User {
   password  String
   createdAt DateTime @default(now())
 }
+
+model ConversationHistory {
+  id         Int      @id @default(autoincrement())
+  sessionId  String  // conversation id
+  role       String  // "user" or "bot"
+  content    String  // message
+  timestamp  DateTime @default(now()) // date
+}

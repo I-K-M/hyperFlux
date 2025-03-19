@@ -7,37 +7,47 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const prisma = new PrismaClient();
 
+exports.checkAuthController = (req, res) => {
+    try {
+        res.status(200).json({ auth: true });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 exports.loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await prisma.user.findUnique({ 
             where: { email }
-    });
-    if (!user) {
-        return res.status(404).json({ auth: false, token: null, message: "User not found." })
-    }
-    const validPassword = await bcrypt.compare( password, user.password);
-    if (!validPassword) {
-        return res.status(401).send({ auth: false, token: null, message: "Invalid password." })
-    } else {
-        const token = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: "12h" });
+        });
+        if (!user) {
+            return res.status(404).json({ auth: false, token: null, message: "User not found." })
+        }
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).send({ auth: false, token: null, message: "Invalid password." })
+        } else {
+            const token = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: "12h" });
 
-    res.cookie("token", token, {
-        httpOnly: true, 
-        secure: isProduction,
-        sameSite: "Strict", 
-        maxAge: 12 * 60 * 60 * 1000 
-    });
-        return res.status(200).send({ auth: true });
-    }
-}   catch (error) {
-    return res.status(500).send({ message: "Internal Server Error." })
+            res.cookie("token", token, {
+                httpOnly: true, 
+                secure: isProduction,
+                sameSite: "Strict", 
+                maxAge: 12 * 60 * 60 * 1000 
+            });
+            return res.status(200).send({ auth: true });
+        }
+    } catch (error) {
+        return res.status(500).send({ message: "Internal Server Error." })
     } 
 }
+
 exports.logoutController = (req, res) => {
     res.clearCookie("token");
     return res.status(200).json({ message: "Logout successful." });
 };
+
 exports.registerController = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -66,6 +76,7 @@ exports.registerController = async (req, res) => {
             return res.status(500).send({ message: "Internal Server Error." });
         } 
 }
+
 exports.passwordResetController = async (req, res) => {
     try {
         const { email } = req.body;

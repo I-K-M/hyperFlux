@@ -21,7 +21,6 @@ const Login = () => {
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         setError('');
-        console.log('Attempting login...', { email, password });
         
         try {
             const response = await fetch('http://localhost:3000/api/auth/login', {
@@ -35,26 +34,20 @@ const Login = () => {
             
             console.log('Response received:', response.status);
             const data = await response.json();
-            console.log('Response data:', data);
             
             if (!response.ok) {
                 setError(data.message || 'Login failed');
             } else {
-                console.log('Before login() call');
                 await login();
-                console.log('After login() call, isAuthenticated:', isAuthenticated);
                 
-                // Vérifier l'état d'authentification avant la navigation
                 const authCheck = await fetch('http://localhost:3000/api/auth/check', {
                     credentials: 'include'
                 });
                 console.log('Auth check status:', authCheck.status);
                 
                 if (authCheck.ok) {
-                    console.log('Attempting navigation to dashboard');
                     navigate('/dashboard', { replace: true });
                 } else {
-                    console.error('Auth check failed after login');
                     setError('Authentication verification failed');
                 }
             }
@@ -84,7 +77,7 @@ const Login = () => {
                 className="w-full bg-slate-600 m-2 p-2" 
                 onChange={handlePasswordChange} 
             />
-            <Button type="submit">Se connecter</Button>
+            <Button type="submit">LogIn</Button>
         </form>
     );
 }

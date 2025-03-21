@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import { AuthContext } from './context/AuthContext';
 import { JSX } from 'react/jsx-runtime'
+import PasswordReset from './components/PasswordReset'
 
 interface ProtectedRouteProps {
   children: JSX.Element;
@@ -32,6 +33,7 @@ const App = () => {
             <Dashboard />
           </ProtectedRoute>
         } />
+        <Route path="/password-reset?token=:token" element={<PasswordReset />} />
         <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
     </Router>

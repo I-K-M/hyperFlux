@@ -119,3 +119,35 @@ exports.passwordResetController = async (req, res) => {
     return res.status(500).send({ message: "Internal Server Error." })
     };
 }
+
+exports.passwordResetRequestController = async (req, res) => {
+    try {
+        const { temporaryToken, password } = req.body;
+        const decoded = jwt.verify(temporaryToken, SECRET_KEY);
+        const userId = decoded.userId;
+        const user = await prisma.user.findUnique({ 
+            where: { id: userId }
+        });
+        if (!user) {
+            return res.status(404).json({ auth: false, token: null, message: "User not found." })
+        } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await prisma.user.update({
+            where: { id: userId }, 
+            data: { password: hashedPassword }
+        })
+        const token = jwt.sign({ userId: user.id }, SECRET_KEY, { expiresIn: "12h" });
+    
+    res.cookie("token", token, {
+        httpOnly: true, 
+        secure: true,   
+        sameSite: "Strict", 
+        maxAge: 12 * 60 * 60 * 1000
+    });
+        return res.status(200).send({ message: "Password reset successful." });
+    }
+    } catch (error) {
+            console.error(error);
+            return res.status(500).send({ message: "Internal Server Error." });
+        } 
+}

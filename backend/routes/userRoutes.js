@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const authenticateUser = require("../middleware/authMiddleware");
 const { PrismaClient } = require("@prisma/client");
+const { v4: uuidv4 } = require('uuid');
 
 const prisma = new PrismaClient();
-
 
 router.get("/session", authenticateUser, async (req, res) => {
     try {
@@ -25,6 +25,24 @@ router.get("/session", authenticateUser, async (req, res) => {
     }
 });
 
+router.post("/session", authenticateUser, async (req, res) => {
+    try {
+        const sessionId = uuidv4();
+        const session = await prisma.conversationHistory.create({
+            data: { 
+                sessionId, 
+                userId: req.userId,
+                role: "system", 
+                content: "Conversation started",
+            },
+        });
+
+        res.json({ sessionId: session.sessionId });
+    } catch (error) {
+        console.error("Prisma error:", error);
+        res.status(500).json({ error: "server error" });
+    }
+});
 
 router.get("/sessions", authenticateUser, async (req, res) => {
     try {

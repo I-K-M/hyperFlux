@@ -5,6 +5,7 @@ const {
     logoutController, 
     registerController, 
     passwordResetController,
+    passwordResetRequestController,
     checkAuthController 
 } = require("../controllers/authController");
 const authenticateUser = require("../middleware/authMiddleware");
@@ -19,5 +20,6 @@ router.post('/login', loginController);
 router.post('/logout', logoutController);
 router.post('/register', registerController);
 router.post('/password-reset', passwordResetController);
+router.post('/password-reset-request', passwordResetRequestController);
 
 module.exports = router;

@@ -4,6 +4,7 @@ import { ThemeContext } from '../context/ThemeContext';
 import { AuthContext } from '../context/AuthContext';
 import Button from '../components/Button';
 import ChatBot from '../components/ChatBot';
+import MyCalendar from '../components/Calendar';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ function Dashboard() {
         WELCOME ON YOUR GREAT DASHBOARD!
       </h1>
       <ChatBot/>
-      
+      <MyCalendar/>
     </>
   )
 }

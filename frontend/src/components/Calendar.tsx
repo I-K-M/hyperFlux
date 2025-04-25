@@ -7,6 +7,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enGB } from 'date-fns/locale'
+import Button from './Button'
 
 const localizer = dateFnsLocalizer({
   formats: {
@@ -20,14 +21,19 @@ const localizer = dateFnsLocalizer({
 { weekStartsOn: 1 }),
   locales: { 'en-GB': enGB },
   getDay,
-})
-
+});
 interface Event {
   id: number;
   title: string;
   start: Date;
   end: Date;
+  color?: string;
+  project?: string;
 }
+type SlotInfo = {
+  start: Date;
+  end: Date;
+};
 
 const DnDCalendar = withDragAndDrop<CalendarProps<Event>>(Calendar);
 
@@ -42,17 +48,53 @@ const CalendarComponent: React.FC = () =>  {
       end: new Date(new Date().getTime() + 60 * 60 *1000),
     }
   ]);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [slotInfo, setSlotInfo] = useState<SlotInfo | null >(null);
+  const [eventTitle, setEventTitle] = useState<string>('');
+  const [eventColor, setEventColor] = useState<string>('');
+  const [eventTag, setEventTag] = useState<string>('');
+
   const moveEvent = ({ event, start, end }: {event: Event; start: Date; end: Date }) => {
     const updated = events.map((e) =>
     e.id === event.id ? { ...e, start, end } : e
   );
   setEvents(updated);
   }
-
+  const handleSelectSlot = ({ start, end }: { start: Date; end: Date}) => {
+    setSlotInfo({ start, end });
+    setModalOpen(true);
+  }
+  const handleAddEvent = (slotInfo: SlotInfo) => {
+    if (!slotInfo) return;
+      const newEvent: Event = {
+        id: events.length + 1,
+        title: eventTitle || 'Untitled event',
+        start: slotInfo?.start,
+        end: slotInfo?.end,
+        color: eventColor || '#cba158',
+        project: eventTag || '',
+      }
+      setEvents([...events, newEvent]);
+      setModalOpen(false);
+      setSlotInfo(null);
+      setEventTitle('');
+      setEventColor('');
+      setEventTag('');
+    }
   return (
     <DndProvider backend={HTML5Backend}>
-      <div style={{ height: '80vh', margin: '20px' }}>
-        <DnDCalendar
+      <div style={{ height: '80vh', margin: '20px' }} className='w-full'>
+        {modalOpen ?
+      <div className='h-80 overflow-y-auto bg-neutral-700 p-4 w-full border-1 border-gray-500 flex flex-col'>
+        <Button onClick={() => setModalOpen(false)}>x</Button>
+        <h4 className='p-4'>Please fill in your event details:</h4>
+        <div className='p-2'>Event Title: <input value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} /></div>
+        <div className='p-2'>Event Color: <input value={eventColor} type="color" onChange={(e) => setEventColor(e.target.value)} /></div>
+        <div className='p-2'>Event Tag: <input value={eventTag} onChange={(e) => setEventTag(e.target.value)} /></div>
+        <Button onClick={() => handleAddEvent(slotInfo)}>SEND</Button>
+      </div>
+      :
+      <DnDCalendar
         localizer={localizer}
         events={events}
         startAccessor='start'
@@ -60,11 +102,24 @@ const CalendarComponent: React.FC = () =>  {
         defaultView='week'
         onEventDrop={moveEvent}
         resizable
+        selectable
         onEventResize= {moveEvent}
+        onSelectSlot= {handleSelectSlot}
+        eventPropGetter={(event: any) => ({
+          style: {
+            backgroundColor: event.color || '#3b82f6',
+            color: '#000',
+            borderRadius: '0',
+            padding: '4px',
+            border: '5px solid #000',
+            fontWeight: '700'
+          }
+        })}
         />
+      }
+        
       </div>
     </DndProvider>
   )
 }
-
 export default CalendarComponent

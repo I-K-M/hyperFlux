@@ -55,12 +55,14 @@ function Dashboard() {
     </div>
     
     
-    {error && <div className="text-red-500 p-2 flex">{error}</div>}
-      <h1 className='p-8 font-bold text-5xl'>
-        WELCOME ON YOUR GREAT DASHBOARD!
+    {error && <div className="text-red-500 p-2">{error}</div>}
+      <h1 className='p-8 text-xl'>
+        Welcome on your dashboard.
       </h1>
-      <ChatBot/>
+      <hr />
       <MyCalendar/>
+      <ChatBot/>
+      
     </>
   )
 }

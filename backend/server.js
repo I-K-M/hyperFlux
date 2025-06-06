@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 const app = express();
 const PORT = process.env.NODE_ENV === 'test' ? 0 : process.env.PORT || 3000;
 const cors = require('cors');
@@ -26,6 +27,7 @@ app.use('/ping', (req, res) => {
 })
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 /* AI */
 app.use('/api/conversation', userRoutes);

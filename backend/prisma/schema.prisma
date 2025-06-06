@@ -28,3 +28,13 @@ model ConversationHistory {
   content    String  // message
   timestamp  DateTime @default(now()) // date
 }
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  project   String
+  start     DateTime
+  end       DateTime
+
+  @@map("tasks")
+}

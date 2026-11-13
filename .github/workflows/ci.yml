@@ -36,6 +36,9 @@ jobs:
         run: npm ci
       - working-directory: backend
         run: npx prisma generate
+      - name: Apply committed Prisma migrations
+        working-directory: backend
+        run: npx prisma migrate deploy
       - working-directory: backend
         run: npm test
   frontend-tests:

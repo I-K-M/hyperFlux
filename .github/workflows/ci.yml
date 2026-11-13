@@ -6,6 +6,9 @@ on:
     branches: [main]
 permissions:
   contents: read
+permissions:
+  contents: read
+
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
@@ -23,7 +26,9 @@ jobs:
       SECRET_KEY: ci-only-secret-ci-only-secret-32-character-minimum
       DATABASE_URL: postgres://postgres:ci-test-only-password@127.0.0.1:5432/mydb
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -40,7 +45,9 @@ jobs:
   frontend-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
         with:
           persist-credentials: false
       - uses: actions/setup-node@v4

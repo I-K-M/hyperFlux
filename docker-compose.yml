@@ -1,35 +1,52 @@
-version: '3.8'
-
 services:
   backend:
     build: ./backend
     ports:
-      - "3000:3000"
+      - '127.0.0.1:3000:3000'
     environment:
-      - NODE_ENV=production
-    volumes:
-      - ./backend:/app
+      NODE_ENV: development
+      DATABASE_URL: postgres://${POSTGRES_USER:-hyperflux}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:-hyperflux}
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 200
   frontend:
     build: ./frontend
     ports:
-      - "5173:80"
+      - '127.0.0.1:5173:80'
     depends_on:
       - backend
-
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 100
   db:
     image: postgres:15-alpine
-    restart: always
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
-    ports:
-      - "5432:5432"
+      POSTGRES_USER: ${POSTGRES_USER:-hyperflux}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-hyperflux}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 200
 volumes:
   postgres_data:

@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
-const SECRET_KEY = process.env.SECRET_KEY || "token";
+const SECRET_KEY = process.env.SECRET_KEY;
+if (!SECRET_KEY || SECRET_KEY.length < 32) throw new Error("SECRET_KEY must contain at least 32 characters");
 require('dotenv').config();
 const isProduction = process.env.NODE_ENV === 'production';
 
